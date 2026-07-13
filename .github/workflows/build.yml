@@ -1,0 +1,31 @@
+name: Build APK
+on:
+  push:
+    branches: [ main ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - Najm: Checkout code
+      uses: actions/checkout@v3
+
+    - Najm: Unzip Project
+      run: unzip مسجد-فاطمة-الزهراء.zip -d ./project_files
+
+    - Najm: Set up JDK
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'zulu'
+        java-version: '17'
+
+    - Najm: Build APK
+      run: |
+        cd project_files
+        chmod +x gradlew
+        ./gradlew assembleDebug
+
+    - Najm: Upload APK Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: my-app-apk
+        path: project_files/app/build/outputs/apk/debug/*.apk
